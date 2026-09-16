@@ -1,0 +1,54 @@
+{
+  "manifest_version": 3,
+  "name": "List Dialer for Pipedrive",
+  "version": "0.5.0",
+  "description": "Call through any Pipedrive list: see the record and its website, dial, log the outcome and note, book meetings. Not affiliated with Pipedrive.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://api.pipedrive.com/*",
+    "https://*.pipedrive.com/*",
+    "https://image.thum.io/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options.html",
+  "action": {
+    "default_title": "List Dialer for Pipedrive: settings",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.pipedrive.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/icon48.png"
+      ],
+      "matches": [
+        "https://*.pipedrive.com/*"
+      ]
+    }
+  ]
+}
