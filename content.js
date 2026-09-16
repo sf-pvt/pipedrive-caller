@@ -690,12 +690,18 @@
     els.note.focus();
   }
 
+  let saving = false;
   async function finish(outcome) {
+    if (saving) return;
+    saving = true;
     const item = state.queue[state.i];
     setState("Saving…", "");
-    const r = await logOutcome(item, outcome, els.note.value.trim());
-    if (!r.ok) { els.err.textContent = "Not logged: " + r.error; renderActions("calling"); setState("Error", "test"); return; }
-    next();
+    for (const b of els.actions.querySelectorAll("button")) b.disabled = true;
+    try {
+      const r = await logOutcome(item, outcome, els.note.value.trim());
+      if (!r.ok) { els.err.textContent = "Not logged: " + r.error; renderActions("calling"); setState("Error", "test"); return; }
+      next();
+    } finally { saving = false; }
   }
 
   function openMeetingForm() {
@@ -724,6 +730,9 @@
 
   async function bookMeeting(item, m) {
     if (!m.date) { els.err.textContent = "Pick a date."; return; }
+    if (saving) return;
+    saving = true;
+    const saveBtn = els.actions.querySelector('[data-f="save"]'); if (saveBtn) saveBtn.disabled = true;
     setState("Saving meeting…", "");
     els.err.textContent = "";
     try {
@@ -768,7 +777,7 @@
       els.err.textContent = "Not saved: " + (e.message || e);
       setState("Error", "test");
       renderActions("calling");
-    }
+    } finally { saving = false; }
   }
 
   // ---------- mount on list pages, follow SPA navigation ----------
