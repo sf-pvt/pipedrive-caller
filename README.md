@@ -4,8 +4,9 @@ A Chrome extension that turns any Pipedrive list into a calling session. Open a 
 **Start calling**, and a call console docks to the right side of the page. For each row it
 shows the record, dials, and lets you log the outcome and a note with one click.
 
-Built by Serviceform for its own sales team, shared as open source under the MIT license.
-Works with the Leads Inbox, deal lists and people lists. Not affiliated with Pipedrive.
+Built by [Serviceform](https://www.serviceform.com) for its own sales team and shared as open
+source under the MIT license, so any Pipedrive user can install it or fork it. Works with the
+Leads Inbox, deal lists and people lists. Not affiliated with Pipedrive.
 Privacy policy: [PRIVACY.md](PRIVACY.md).
 
 **New here? Read [INSTALL.md](INSTALL.md), the step-by-step guide.**
@@ -52,7 +53,7 @@ Click the extension icon to open them.
 | Seconds before dialing | Countdown length in Auto mode. |
 | How to dial | `tel:`, `facetime-audio:` or `callto:`. |
 | Where a booked meeting's deal goes | The pipeline stage for converted leads. |
-| Screenshot key | Optional thum.io key for faster screenshots. Without it the free tier is used. |
+| Screenshot key | Optional [thum.io](https://www.thum.io) key for faster screenshots. Without it the free tier is used. |
 | Test mode | A number that is dialed instead of the real one. The panel turns red. Outcomes still go to the real record. |
 
 ## Keyboard
@@ -112,3 +113,14 @@ zip -qr pipedrive-dialer.zip . -x "store-listing.md" "store-screenshot*" ".DS_St
 ```
 
 Bump `version` in `manifest.json` for every Web Store upload.
+
+## Credits
+
+- Made by [Serviceform](https://www.serviceform.com), Helsinki. Serviceform builds AI chat, forms
+  and lead tools for websites; this dialer started as an internal tool for its sales team.
+- Website screenshots are provided by [thum.io](https://www.thum.io). Their free tier works
+  without a key; a paid key removes its limits. Use of thum.io is subject to
+  [their terms](https://www.thum.io/terms).
+- [Pipedrive](https://www.pipedrive.com) is a trademark of Pipedrive OÜ. This project is an
+  independent tool that uses the public Pipedrive API and is not affiliated with, endorsed by,
+  or sponsored by Pipedrive.

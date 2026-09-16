@@ -1,6 +1,6 @@
 # Privacy policy: List Dialer for Pipedrive
 
-Last updated: 16 September 2026. Published by Serviceform Oy, Finland.
+Last updated: 16 September 2026. Published by Serviceform Oy, Finland (https://www.serviceform.com).
 
 ## What the extension is
 A Chrome extension that helps a salesperson call through a list of contacts in their own
@@ -15,8 +15,8 @@ Pipedrive account and log the calls there. It is not affiliated with Pipedrive.
 - **What you write.** Your notes, call outcomes and meetings are sent to your Pipedrive account
   and stored there, under your user.
 - **Website domains.** To show a screenshot of a company's website, the extension sends that
-  website's address to thum.io, a screenshot service. No names, phone numbers or other
-  personal data are sent there.
+  website's address to thum.io (https://www.thum.io), a screenshot service, under thum.io's
+  own privacy policy. No names, phone numbers or other personal data are sent there.
 - **Settings.** Dial mode, countdown length and similar choices, stored on your computer.
 
 ## What it does not do

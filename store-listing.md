@@ -7,8 +7,10 @@ Language: English
 Visibility: Unlisted (only people with the link can install)
 
 ## Description
-List Dialer for Pipedrive is an independent tool made by Serviceform Oy. It is not affiliated
-with, endorsed by, or sponsored by Pipedrive.
+List Dialer for Pipedrive is an independent, open-source tool made by Serviceform
+(https://www.serviceform.com). It is not affiliated with, endorsed by, or sponsored by Pipedrive.
+Website screenshots are provided by thum.io (https://www.thum.io). Source code:
+https://github.com/sf-pvt/pipedrive-caller
 
 A bar on top of any Pipedrive list view (Leads Inbox, Deals, People).
 Press Start calling. For each row it shows the record with its website, dials the number

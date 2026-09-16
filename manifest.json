@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "List Dialer for Pipedrive",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Call through any Pipedrive list: see the record and its website, dial, log the outcome and note, book meetings. Not affiliated with Pipedrive.",
   "permissions": [
     "storage"
@@ -50,5 +50,7 @@
         "https://*.pipedrive.com/*"
       ]
     }
-  ]
+  ],
+  "homepage_url": "https://github.com/sf-pvt/pipedrive-caller",
+  "author": "Serviceform"
 }
