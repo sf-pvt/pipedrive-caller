@@ -28,7 +28,7 @@ Start calling. The details are below.
 ## 3. Connect it to your Pipedrive
 
 1. Open Pipedrive > your picture (top right) > Personal preferences > API.
-   At Serviceform that is this link: https://serviceform.pipedrive.com/settings/api
+   The address is `https://<your company>.pipedrive.com/settings/api`.
 2. Copy the long code under **Your personal API token**. If there is none, click Generate.
 3. Click the dialer icon next to Chrome's address bar. The settings page opens.
 4. Paste the code into **Your Pipedrive API token** and click **Save**.
@@ -53,9 +53,8 @@ Both devices must use the same Apple ID and be on the same Wi-Fi.
 
 ## 5. Make your first calls
 
-1. Open a list in Pipedrive, for example the Leads Inbox (at Serviceform:
-   https://serviceform.pipedrive.com/leads/inbox). Pick a filter so the list shows the people
-   you want to call.
+1. Open a list in Pipedrive, for example Leads > Leads Inbox. Pick a filter so the list shows
+   the people you want to call.
 2. The dialer appears on the right side of the page.
 3. Press **Start calling**.
 4. The first record shows up. After the countdown the call starts. Your iPhone rings out,
@@ -85,4 +84,4 @@ Useful buttons:
 - "Start calling" opens the settings instead: your token is missing or wrong, see step 3.
 - Calls do not start: check step 4. Test by opening FaceTime on the Mac and dialing any
   number by hand.
-- Ask Jarkko if you are stuck (Serviceform team). Others: open an issue on GitHub.
+- Stuck? Open an issue on GitHub: https://github.com/sf-pvt/pipedrive-caller/issues
