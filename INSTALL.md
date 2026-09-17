@@ -1,11 +1,11 @@
 # How to install the dialer (step by step)
 
-Takes about 5 minutes. You need Google Chrome on a Mac, and an iPhone if you want to call
-through your phone.
+Takes about 5 minutes. You need Google Chrome on a Mac, and either a Ringover account or an
+iPhone.
 
 **The short version:** download the zip, unzip it, add the folder to Chrome as an unpacked
-extension, paste your own Pipedrive API token in its settings, open a Pipedrive list, press
-Start calling. The details are below.
+extension, paste your own Pipedrive API token in its settings, choose Ringover or your iPhone
+as the calling app, open a Pipedrive list, press Start calling. The details are below.
 
 ## 1. Download the extension
 
@@ -37,7 +37,25 @@ Start calling. The details are below.
 
 Nobody else needs this code. Do not send it to anyone.
 
-## 4. Let your Mac call through your iPhone (one time)
+## 4. Choose how calls are placed (one time)
+
+The extension does not make the call itself. It hands the number to a calling app on your Mac.
+Pick one of these two.
+
+### Option A: Ringover (recommended if you have a Ringover number)
+
+1. Install the Ringover desktop app: open https://dashboard.ringover.com/apps and click
+   **Mac store** (or search "Ringover" in the Mac App Store).
+2. Open the app and log in with your Ringover account. Leave it running.
+3. Click the dialer icon in Chrome > settings > **How to dial** > choose
+   **callto: (Ringover desktop app or other softphone)** > Save.
+4. Test: open a list, press Start calling. The Ringover app rings out on your Ringover number.
+
+Calls go out on your Ringover number and cost nothing extra on your mobile plan.
+
+### Option B: your iPhone through FaceTime
+
+Only works with an iPhone and a Mac on the same Apple ID. Calls use your own mobile plan.
 
 On the iPhone:
 1. Settings > Apps > Phone (older phones: Settings > Phone).
@@ -49,7 +67,15 @@ On the Mac:
 2. FaceTime menu > Settings > General.
 3. Tick **Calls from iPhone**.
 
-Both devices must use the same Apple ID and be on the same Wi-Fi.
+If **Calls on Other Devices** is missing on the iPhone, or the Mac is not in its list, check
+these in order:
+- iPhone: Settings > FaceTime is switched on and signed in with your Apple ID.
+- iPhone: Settings > General > AirPlay & Continuity (older: Handoff) > **Handoff** is on.
+- Mac: System Settings > General > AirDrop & Handoff > **Allow Handoff** is on.
+- Both devices: same Apple ID in iCloud, Wi-Fi and Bluetooth on, same Wi-Fi network.
+- Quit and reopen FaceTime on the Mac, then look at the iPhone list again.
+- Still missing: your SIM or carrier does not allow it (common with some business and prepaid
+  lines). Use Option A instead.
 
 ## 5. Make your first calls
 
@@ -57,8 +83,9 @@ Both devices must use the same Apple ID and be on the same Wi-Fi.
    the people you want to call.
 2. The dialer appears on the right side of the page.
 3. Press **Start calling**.
-4. The first record shows up. After the countdown the call starts. Your iPhone rings out,
-   or your Mac shows "Open FaceTime?" the first time: tick "Always allow" and click Open.
+4. The first record shows up. After the countdown the call starts in Ringover, or on your
+   iPhone. The first time, Chrome asks "Open Ringover?" or "Open FaceTime?": tick "Always
+   allow" and click Open.
 5. When the call is over, write a short note and press the outcome:
    Answered, No answer, Busy, Gatekeeper, Not interested, or Meeting booked.
 6. It moves to the next record by itself.
@@ -82,6 +109,6 @@ Useful buttons:
 - No dialer on the page: refresh the page. Make sure you are on a list view (rows), not a
   single record.
 - "Start calling" opens the settings instead: your token is missing or wrong, see step 3.
-- Calls do not start: check step 4. Test by opening FaceTime on the Mac and dialing any
-  number by hand.
+- Calls do not start: check step 4. Make sure the Ringover app is open and logged in, or
+  test FaceTime by dialing any number by hand on the Mac.
 - Stuck? Open an issue on GitHub: https://github.com/sf-pvt/pipedrive-caller/issues
