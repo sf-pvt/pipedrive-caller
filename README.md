@@ -20,10 +20,11 @@ Privacy policy: [PRIVACY.md](PRIVACY.md).
   screenshot of the company website.
 - **Shows the full history.** Every note and every activity on the record, newest first, in a
   side column that can be collapsed.
-- **Dials.** Auto mode dials after a countdown, Manual mode waits for you. Dialing opens a
-  `tel:` link, so on a Mac with "Calls from iPhone" switched on the iPhone places the call.
-  `callto:` (Ringover desktop app or any softphone) and `facetime-audio:` are options in the
-  settings.
+- **Dials, two ways.** Every record has **Call with Ringover** and **Call with iPhone**.
+  Ringover uses Ringover's callback API: your Ringover app or phone rings first, then it dials
+  the prospect on your Ringover number. iPhone opens a `tel:` link, which a Mac with "Calls from
+  iPhone" places through your phone. Auto mode dials with the button chosen in the settings
+  after a countdown; Manual mode waits for you.
 - **Logs the outcome.** Answered, No answer, Busy, Gatekeeper, Not interested, plus your note.
   Then it moves to the next row.
 - **Books meetings.** Date, time, length and who holds it. On a lead it converts the lead to a
@@ -51,7 +52,11 @@ Click the extension icon to open them.
 | Your Pipedrive API token | From Pipedrive > your picture > Personal preferences > API. The page shows whose token it is. Admin tokens may log on behalf of someone else. |
 | Dial mode | Auto (dial after the countdown) or Manual (you press Call). Also switchable in the panel. |
 | Seconds before dialing | Countdown length in Auto mode. |
-| How to dial | `tel:`, `facetime-audio:` or `callto:`. |
+| Auto-dial uses | Ringover or iPhone. |
+| Ringover API key | Team key from dashboard.ringover.com > Developer > API, with Calls Write and Users Read, Monitoring on. Optional: without it the Ringover button opens a `callto:` link for the desktop app. |
+| Your Ringover number | Which of the team's numbers the call is placed from. |
+| Country code for local numbers | Ringover needs full international numbers; local ones get this code. |
+| iPhone button opens | `tel:`, `facetime-audio:` or `callto:`. |
 | Where a booked meeting's deal goes | The pipeline stage for converted leads. |
 | Screenshot key | Optional [thum.io](https://www.thum.io) key for faster screenshots. Without it the free tier is used. |
 | Test mode | A number that is dialed instead of the real one. The panel turns red. Outcomes still go to the real record. |

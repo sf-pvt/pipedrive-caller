@@ -24,11 +24,40 @@ preferences &gt; API &gt; copy the token. It only has your own rights, and calls
 <p class="hint">Your token is an admin token, so you can log on behalf of someone else. Leave it on yourself unless you are testing for a colleague.</p>
 </div>
 
-<label for="scheme">How to dial</label>
+<h2 style="font-size:15px;margin-top:26px">Calling</h2>
+<p class="hint">The panel has two call buttons: <b>Call with Ringover</b> and <b>Call with iPhone</b>. Auto-dial uses the one chosen here.</p>
+
+<label>Auto-dial uses</label>
+<div class="row" style="gap:18px">
+  <label style="margin:0;font-weight:500"><input type="radio" name="dialDefault" value="ringover" id="defRingover"> Ringover</label>
+  <label style="margin:0;font-weight:500"><input type="radio" name="dialDefault" value="phone" id="defPhone" checked> iPhone (FaceTime)</label>
+</div>
+
+<label for="ringoverKey">Ringover API key (team key, optional)</label>
+<input id="ringoverKey" type="password" autocomplete="off" placeholder="from dashboard.ringover.com > Developer > API">
+<p class="hint">With a key, "Call with Ringover" makes Ringover ring your own app or phone first and then dial the prospect. Without a key it opens a callto: link for the Ringover desktop app instead.</p>
+
+<label for="ringoverFrom">Your Ringover number</label>
+<select id="ringoverFrom"><option value="">Save the Ringover key first…</option></select>
+<p class="hint">The number the call is placed from. The key needs Monitoring switched on to call from a team member's number.</p>
+
+<label for="ringoverDevice">Ring me on</label>
+<select id="ringoverDevice">
+  <option value="ALL">All my devices</option>
+  <option value="APP">Desktop app</option>
+  <option value="WEB">Web app</option>
+  <option value="MOB">Mobile app</option>
+</select>
+
+<label for="defaultCC">Country code for local numbers</label>
+<input id="defaultCC" type="text" placeholder="e.g. 358" style="width:120px">
+<p class="hint">Ringover needs the full international number. A number stored as 040 123 4567 becomes +358 40 123 4567 with 358 here.</p>
+
+<label for="scheme">iPhone button opens</label>
 <select id="scheme">
   <option value="tel">tel: (Mac opens FaceTime, calls go through your iPhone)</option>
   <option value="facetime-audio">facetime-audio: (FaceTime audio call)</option>
-  <option value="callto">callto: (Ringover desktop app or other softphone)</option>
+  <option value="callto">callto: (any softphone registered for callto links)</option>
 </select>
 
 <label>Dial mode</label>
@@ -37,7 +66,7 @@ preferences &gt; API &gt; copy the token. It only has your own rights, and calls
   <label style="margin:0;font-weight:500"><input type="radio" name="dialMode" value="manual" id="dialManual"> I press Call for each record</label>
 </div>
 
-<label for="preview">Seconds to show the record before dialing (auto-dial only)</label>
+<label for="preview">Seconds to show the record before auto-dialing</label>
 <div class="row"><input id="preview" type="number" min="0" max="60" value="5"> <span class="hint">0 = dial at once. Pause stops the countdown.</span></div>
 
 <label for="testNumber">Test mode: dial this number instead of the real one</label>

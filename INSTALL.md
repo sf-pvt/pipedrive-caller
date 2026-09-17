@@ -44,12 +44,15 @@ Pick one of these two.
 
 ### Option A: Ringover (recommended if you have a Ringover number)
 
-1. Install the Ringover desktop app: open https://dashboard.ringover.com/apps and click
-   **Mac store** (or search "Ringover" in the Mac App Store).
-2. Open the app and log in with your Ringover account. Leave it running.
-3. Click the dialer icon in Chrome > settings > **How to dial** > choose
-   **callto: (Ringover desktop app or other softphone)** > Save.
-4. Test: open a list, press Start calling. The Ringover app rings out on your Ringover number.
+1. Have the Ringover app open and logged in: the desktop app
+   (https://dashboard.ringover.com/apps > Mac store), the web app (https://app.ringover.com)
+   or the mobile app. Any of them works.
+2. Click the dialer icon in Chrome > settings. Paste the **Ringover API key** your admin gives
+   you, Save, then pick **your own number** under "Your Ringover number" and Save again.
+3. Set **Auto-dial uses** to Ringover, and put your country code (358 for Finland, 34 for
+   Spain, 39 for Italy) under "Country code for local numbers".
+4. Test: open a list, press Start calling. Your Ringover app rings first. Pick up, and it
+   dials the prospect from your Ringover number.
 
 Calls go out on your Ringover number and cost nothing extra on your mobile plan.
 

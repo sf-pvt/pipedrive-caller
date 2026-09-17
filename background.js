@@ -9,6 +9,10 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     apiCall(msg).then(sendResponse).catch((e) => sendResponse({ ok: false, error: String(e) }));
     return true; // async
   }
+  if (msg && msg.kind === "ringover") {
+    ringoverCall(msg).then(sendResponse).catch((e) => sendResponse({ ok: false, error: String(e) }));
+    return true;
+  }
   if (msg && msg.kind === "image") {
     fetchImage(msg.url).then(sendResponse).catch((e) => sendResponse({ ok: false, error: String(e) }));
     return true;
@@ -45,4 +49,18 @@ async function fetchImage(url) {
   let bin = ""; const bytes = new Uint8Array(buf);
   for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
   return { ok: true, type, dataUrl: `data:${type};base64,${btoa(bin)}` };
+}
+
+// Ringover public API v2. The team key is entered in the settings; header is "Authorization: <key>".
+async function ringoverCall({ method = "GET", path, body }) {
+  const { ringoverKey, ringoverRegion } = await chrome.storage.local.get(["ringoverKey", "ringoverRegion"]);
+  if (!ringoverKey) return { ok: false, error: "No Ringover API key in the settings." };
+  const base = ringoverRegion === "us" ? "https://public-api-us.ringover.com/v2" : "https://public-api.ringover.com/v2";
+  const init = { method, headers: { Authorization: ringoverKey, "Content-Type": "application/json" } };
+  if (body) init.body = JSON.stringify(body);
+  const r = await fetch(base + path, init);
+  const text = await r.text();
+  let j = {}; try { j = JSON.parse(text); } catch (e) {}
+  if (!r.ok) return { ok: false, error: `Ringover ${r.status}: ${(j && (j.message || j.error)) || text.slice(0, 200) || r.statusText}` };
+  return { ok: true, data: j };
 }

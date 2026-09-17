@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "List Dialer for Pipedrive",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Call through any Pipedrive list: see the record and its website, dial, log the outcome and note, book meetings. Not affiliated with Pipedrive.",
   "permissions": [
     "storage"
@@ -9,7 +9,9 @@
   "host_permissions": [
     "https://api.pipedrive.com/*",
     "https://*.pipedrive.com/*",
-    "https://image.thum.io/*"
+    "https://image.thum.io/*",
+    "https://public-api.ringover.com/*",
+    "https://public-api-us.ringover.com/*"
   ],
   "background": {
     "service_worker": "background.js"

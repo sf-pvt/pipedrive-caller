@@ -22,7 +22,7 @@
   const SHOT = (site) => `https://image.thum.io/get/${settings.thumKey ? "auth/" + settings.thumKey + "/" : ""}width/800/crop/450/noanimate/https://${site}`;
   const FREEMAIL = /^(gmail|hotmail|outlook|live|yahoo|icloud|me|msn|aol|protonmail|proton|gmx|mail|yandex|suomi24|luukku|elisanet|kolumbus|pp|saunalahti)\./i;
 
-  const settings = { scheme: "tel", preview: 5, setLabel: true, testNumber: "", autoDial: true, userId: null, userName: "", thumKey: "", bookPipeline: null, bookStage: null };
+  const settings = { scheme: "tel", preview: 5, setLabel: true, testNumber: "", autoDial: true, userId: null, userName: "", thumKey: "", bookPipeline: null, bookStage: null, dialDefault: "phone", ringoverKey: "", ringoverFrom: "", ringoverDevice: "ALL", defaultCC: "" };
   const state = { queue: [], i: -1, phase: "idle", timer: null, countdown: 0, run: 0, leadLabels: null, orgSiteKeys: null, orgPhoneKeys: [], stages: null };
   let panel, els;
 
@@ -569,17 +569,26 @@
     const add = (el) => els.actions.appendChild(el);
     const btn = (label, cls, fn, key) => { const b = document.createElement("button"); b.className = cls; b.innerHTML = esc(label) + (key ? ` <kbd>${key}</kbd>` : ""); b.addEventListener("click", fn); return b; };
     const nav = (...items) => { const d = document.createElement("div"); d.className = "pdd-nav"; d.style.flexBasis = "100%"; items.forEach((x) => d.appendChild(x)); return d; };
+    const def = settings.dialDefault === "ringover" ? "ringover" : "phone";
+    const callBtns = (again) => {
+      const r = btn(again ? "Ringover again" : "Call with Ringover", "pdd-btn " + (def === "ringover" ? "go" : "soft"), () => dial(again, "ringover"), def === "ringover" ? "↵" : null);
+      const ph = btn(again ? "iPhone again" : "Call with iPhone", "pdd-btn " + (def === "phone" ? "go" : "soft"), () => dial(again, "phone"), def === "phone" ? "↵" : null);
+      return def === "ringover" ? [r, ph] : [ph, r];
+    };
     if (phase === "preview") {
-      const call = btn("Call now", "pdd-btn go pdd-cd", () => dial(), "↵"); call.innerHTML = `<i></i><span>${call.innerHTML}</span>`; call.dataset.cd = "1";
-      add(nav(call, btn("Skip ›", "pdd-link", () => next())));
+      const [a, b] = callBtns(false);
+      if (settings.autoDial) { a.classList.add("pdd-cd"); a.innerHTML = `<i></i><span>${a.innerHTML}</span>`; a.dataset.cd = "1"; }
+      add(nav(a, b, btn("Skip ›", "pdd-link", () => next())));
       els.hint.innerHTML = "<kbd>Esc</kbd> pauses · <kbd>→</kbd> skips";
     } else if (phase === "paused") {
-      add(nav(btn("Resume", "pdd-btn go", () => resume()), btn("Call now", "pdd-btn soft", () => dial(), "↵"), btn("Skip ›", "pdd-link", () => next())));
+      const [a, b] = callBtns(false);
+      add(nav(btn("Resume", "pdd-btn go", () => resume()), a, b, btn("Skip ›", "pdd-link", () => next())));
       els.hint.innerHTML = "";
     } else if (phase === "calling") {
       for (const o of OUTCOMES) add(btn(o.label, "pdd-out " + o.cls, () => finish(o), o.key));
       add(btn(MEETING.label, "pdd-out " + MEETING.cls, () => openMeetingForm(), MEETING.key));
-      add(nav(btn("Call again", "pdd-btn soft", () => dial(true), "↵"), btn("Next without logging ›", "pdd-link", () => next(), "→")));
+      const [a, b] = callBtns(true);
+      add(nav(a, b, btn("Next without logging ›", "pdd-link", () => next(), "→")));
       els.hint.innerHTML = "<kbd>1</kbd>–<kbd>6</kbd> log the outcome · <kbd>↵</kbd> calls again · <kbd>Esc</kbd> pauses";
     } else if (phase === "done") {
       add(nav(btn("Start again", "pdd-btn go", () => onStartPause())));
@@ -590,9 +599,9 @@
   // ---------- flow ----------
   async function onStartPause() {
     if (state.phase === "idle" || state.phase === "done") {
-      const s = await store.get(["apiToken", "scheme", "preview", "setLabel", "testNumber", "autoDial", "userId", "userName", "thumKey", "bookPipeline", "bookStage"]);
+      const s = await store.get(["apiToken", "scheme", "preview", "setLabel", "testNumber", "autoDial", "userId", "userName", "thumKey", "bookPipeline", "bookStage", "dialDefault", "ringoverKey", "ringoverFrom", "ringoverDevice", "defaultCC"]);
       if (!s.apiToken || !s.userId) { send({ kind: "openOptions" }); return; }
-      Object.assign(settings, { scheme: s.scheme || "tel", preview: s.preview ?? 5, setLabel: s.setLabel !== false, testNumber: cleanPhone(s.testNumber || ""), autoDial: s.autoDial !== false, userId: s.userId, userName: s.userName || "", thumKey: (s.thumKey || "").trim(), bookPipeline: s.bookPipeline || null, bookStage: s.bookStage || null });
+      Object.assign(settings, { scheme: s.scheme || "tel", preview: s.preview ?? 5, setLabel: s.setLabel !== false, testNumber: cleanPhone(s.testNumber || ""), autoDial: s.autoDial !== false, userId: s.userId, userName: s.userName || "", thumKey: (s.thumKey || "").trim(), bookPipeline: s.bookPipeline || null, bookStage: s.bookStage || null, dialDefault: s.dialDefault === "ringover" ? "ringover" : "phone", ringoverKey: (s.ringoverKey || "").trim(), ringoverFrom: s.ringoverFrom || "", ringoverDevice: s.ringoverDevice || "ALL", defaultCC: (s.defaultCC || "").replace(/\D/g, "") });
       panel.classList.toggle("pdd-test", !!settings.testNumber);
       let rows = readRows();
       const missing = rows.filter((r) => !r.phone && r.id && (r.kind === "deal" || r.kind === "person"));
@@ -666,7 +675,7 @@
     const tick = () => {
       if (run !== state.run || state.phase !== "preview") { stopTimer(); return; }
       setState(`Calling in ${state.countdown}s`, "live");
-      if (call) { call.querySelector("span").innerHTML = `Call now · ${state.countdown}s <kbd>↵</kbd>`; call.querySelector("i").style.width = Math.round(100 * (total - state.countdown) / total) + "%"; }
+      if (call) { call.querySelector("span").innerHTML = `${settings.dialDefault === "ringover" ? "Ringover" : "iPhone"} in ${state.countdown}s <kbd>↵</kbd>`; call.querySelector("i").style.width = Math.round(100 * (total - state.countdown) / total) + "%"; }
       if (state.countdown <= 0) { stopTimer(); dial(); return; }
       state.countdown -= 1;
     };
@@ -674,19 +683,43 @@
     state.timer = setInterval(tick, 1000);
   }
 
-  function dial(redial) {
+  // Full international digits for Ringover: +358 40 123 4567 -> 358401234567. A local number gets
+  // the country code from the settings.
+  function e164Digits(num) {
+    let d = (num || "").replace(/\D/g, "");
+    if ((num || "").trim().startsWith("+")) return d;
+    if (d.startsWith("00")) return d.slice(2);
+    if (d.startsWith("0") && settings.defaultCC) return settings.defaultCC + d.slice(1);
+    return d;
+  }
+
+  function dial(redial, target) {
     stopTimer();
     const item = state.queue[state.i];
     if (!item || !item.phone) { next(); return; }
+    target = target || settings.dialDefault || "phone";
     state.phase = "calling";
     const number = settings.testNumber || item.phone;
-    setState(settings.testNumber ? "Test call dialed" : "Dialed", settings.testNumber ? "test" : "live");
     renderActions("calling");
     els.start.textContent = "Pause"; els.start.className = "pdd-btn warn";
-    const a = document.createElement("a");
-    a.href = `${settings.scheme}:${number}`;
-    a.style.display = "none";
-    document.body.appendChild(a); a.click(); a.remove();
+    els.err.textContent = "";
+    if (target === "ringover" && settings.ringoverKey) {
+      setState(settings.testNumber ? "Test call · Ringover" : "Ringover is calling you…", settings.testNumber ? "test" : "live");
+      const body = { to_number: Number(e164Digits(number)), device: settings.ringoverDevice || "ALL", timeout: 45, clir: false };
+      if (settings.ringoverFrom) body.from_number = Number(e164Digits(settings.ringoverFrom));
+      send({ kind: "ringover", method: "POST", path: "/callback", body }).then((r) => {
+        if (state.queue[state.i] !== item) return;
+        if (r.ok) setState(settings.testNumber ? "Test call dialed · Ringover" : "Dialed · Ringover", settings.testNumber ? "test" : "live");
+        else { els.err.textContent = "Ringover did not start the call: " + r.error; setState("Ringover error", "test"); }
+      });
+    } else {
+      const scheme = target === "ringover" ? "callto" : settings.scheme;
+      setState(settings.testNumber ? "Test call dialed" : (target === "ringover" ? "Dialed · Ringover app" : "Dialed · iPhone"), settings.testNumber ? "test" : "live");
+      const a = document.createElement("a");
+      a.href = `${scheme}:${number}`;
+      a.style.display = "none";
+      document.body.appendChild(a); a.click(); a.remove();
+    }
     els.note.focus();
   }
 

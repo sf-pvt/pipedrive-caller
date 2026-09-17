@@ -1,11 +1,16 @@
 const $ = (id) => document.getElementById(id);
-chrome.storage.local.get(["apiToken", "scheme", "preview", "setLabel", "testNumber", "autoDial", "userId", "userName", "thumKey", "bookStage"]).then((s) => {
+chrome.storage.local.get(["apiToken", "scheme", "preview", "setLabel", "testNumber", "autoDial", "userId", "userName", "thumKey", "bookStage", "dialDefault", "ringoverKey", "ringoverFrom", "ringoverDevice", "defaultCC"]).then((s) => {
   if (s.apiToken) $("apiToken").value = s.apiToken;
   $("scheme").value = s.scheme || "tel";
   $("preview").value = s.preview ?? 5;
   $("setLabel").checked = s.setLabel !== false;
   $("testNumber").value = s.testNumber || "";
   $("thumKey").value = s.thumKey || "";
+  (s.dialDefault === "ringover" ? $("defRingover") : $("defPhone")).checked = true;
+  $("ringoverKey").value = s.ringoverKey || "";
+  $("ringoverDevice").value = s.ringoverDevice || "ALL";
+  $("defaultCC").value = s.defaultCC || "";
+  if (s.ringoverKey) loadRingoverNumbers(s.ringoverFrom);
   (s.autoDial === false ? $("dialManual") : $("dialAuto")).checked = true;
   if (s.apiToken) { identify(s.userId); loadStagePicker(s.bookStage); }
 });
@@ -30,6 +35,20 @@ async function loadStagePicker(selected) {
   for (const s of st.data) { const o = document.createElement("option"); o.value = s.id; o.textContent = (names[s.pipeline_id] || s.pipeline_id) + " › " + s.name; if (String(s.id) === String(selected)) o.selected = true; sel.appendChild(o); }
 }
 
+async function loadRingoverNumbers(selected) {
+  const sel = $("ringoverFrom");
+  const r = await chrome.runtime.sendMessage({ kind: "ringover", path: "/users" });
+  if (!r.ok) { sel.innerHTML = `<option value="">${r.error}</option>`; return; }
+  const users = (r.data && (r.data.list || r.data)) || [];
+  sel.innerHTML = '<option value="">the key owner\'s own number</option>';
+  for (const u of Array.isArray(users) ? users : []) {
+    const name = [u.firstname, u.lastname].filter(Boolean).join(" ") || u.email || "user";
+    const nums = (u.numbers || u.number_list || []).map((n) => (typeof n === "object" ? (n.number || n.number_id || n.id) : n)).filter(Boolean);
+    for (const n of nums) { const o = document.createElement("option"); o.value = String(n); o.textContent = `${name} · +${String(n).replace(/^\+/, "")}`; if (String(n) === String(selected)) o.selected = true; sel.appendChild(o); }
+  }
+  if (!sel.options[1]) sel.innerHTML += '<option value="" disabled>no numbers returned (Monitoring off?)</option>';
+}
+
 // Who owns the token decides who the calls are logged as. Admin tokens may pick someone else.
 async function identify(selected) {
   const me = await chrome.runtime.sendMessage({ kind: "api", path: "/users/me" });
@@ -43,7 +62,9 @@ async function identify(selected) {
 
 $("save").addEventListener("click", async () => {
   const apiToken = $("apiToken").value.trim();
-  await chrome.storage.local.set({ apiToken, scheme: $("scheme").value, preview: Math.max(0, Number($("preview").value) || 0), setLabel: $("setLabel").checked, testNumber: $("testNumber").value.trim(), autoDial: $("dialAuto").checked, thumKey: $("thumKey").value.trim(), bookStage: $("bookStage").value ? Number($("bookStage").value) : null });
+  await chrome.storage.local.set({ apiToken, scheme: $("scheme").value, preview: Math.max(0, Number($("preview").value) || 0), setLabel: $("setLabel").checked, testNumber: $("testNumber").value.trim(), autoDial: $("dialAuto").checked, thumKey: $("thumKey").value.trim(), bookStage: $("bookStage").value ? Number($("bookStage").value) : null,
+    dialDefault: $("defRingover").checked ? "ringover" : "phone", ringoverKey: $("ringoverKey").value.trim(), ringoverFrom: $("ringoverFrom").value, ringoverDevice: $("ringoverDevice").value, defaultCC: $("defaultCC").value.replace(/\D/g, "") });
+  if ($("ringoverKey").value.trim()) loadRingoverNumbers($("ringoverFrom").value);
   const st = $("status");
   st.textContent = "Checking token…"; st.className = "hint";
   const me = await identify($("userId").value);
